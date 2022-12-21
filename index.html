@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time_Capsule</title>
+  </head>
+  <script>
+    window.onload = function () {
+      makeCalendar("2022", "10");
+    };
+
+    function makeCalendar(yyyy, mm) {
+      const beforeCalendar = document.getElementById("calendar");
+      console.log(beforeCalendar);
+      if (beforeCalendar != null) {
+        beforeCalendar.remove();
+      }
+      let year = Number(yyyy);
+      let month = Number(mm) - 1;
+      let date = new Date(year, month);
+      let lastDate = new Date(year, month + 1, date.getDate() - 1);
+
+      let startDay = date.getDay();
+      let endDay = lastDate.getDay() + 1;
+
+      let startCalDate = new Date(year, month, date.getDate() - startDay);
+      let endCalDate = new Date(year, month, lastDate.getDate() + 7 - endDay);
+
+      let calendar = getDatesStartToLast(startCalDate, endCalDate);
+
+      if (calendar) {
+        const calendarDom = document.createElement("div");
+        calendarDom.id = "calendar";
+
+        let basicWeekInfo = document.createElement("ul");
+        basicWeekInfo.className = "week_info";
+
+        let baseDay = ["일", "월", "화", "수", "목", "금", "토"];
+        for (let i = 0; i < baseDay.length; i++) {
+          console.log(baseDay[i]);
+          let basedayLi = document.createElement("li");
+          basedayLi.className = "base_day day day_" + i;
+          basedayLi.innerHTML = baseDay[i];
+          basicWeekInfo.appendChild(basedayLi);
+        }
+
+        calendarDom.appendChild(basicWeekInfo);
+
+        let weekList = [];
+        for (key in calendar) {
+          if (!weekList.includes(calendar[key].weekCnt))
+            weekList.push(calendar[key].weekCnt);
+        }
+
+        weekList.forEach(function (idx) {
+          let ul = document.createElement("ul");
+          ul.className = "week week_" + idx;
+          for (key in calendar) {
+            if (calendar[key].weekCnt == idx) {
+              let li = document.createElement("li");
+              li.className = key + " day day_" + calendar[key].dayIdx;
+              let strMonth = calendar[key].month;
+              let day = calendar[key].day;
+              day = day < 10 ? "0" + day : day;
+
+              if (strMonth == month + 1) {
+                strMonth = strMonth < 10 ? "0" + strMonth : strMonth;
+                li.innerHTML = strMonth + "-" + day;
+              } else {
+                li.classList.add("isEmpty");
+              }
+              ul.appendChild(li);
+            }
+          }
+          calendarDom.appendChild(ul);
+        });
+
+        document.getElementById("app").appendChild(calendarDom);
+      }
+    }
+
+    function getDatesStartToLast(startDate, lastDate) {
+      var result = {};
+      var curDate = startDate;
+      let weekCnt = 0;
+      while (curDate <= lastDate) {
+        result[curDate.toISOString().split("T")[0]] = {
+          year: curDate.getFullYear(),
+          month: curDate.getMonth() + 1,
+          day: curDate.getDate(),
+          dayIdx: curDate.getDay(),
+          weekCnt: weekCnt,
+        };
+        if (curDate.getDay() === 6) weekCnt++;
+        curDate.setDate(curDate.getDate() + 1);
+      }
+      return result;
+    }
+
+    function getDate(_obj) {
+      console.log(_obj.value);
+      const valueArray = _obj.value.split("-");
+      makeCalendar(valueArray[0], valueArray[1]);
+    }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    ul li {
+      list-style: none;
+    }
+    #calendar {
+      margin: 20px;
+      width: 490px;
+    }
+    #calendar > ul {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #calendar > ul li {
+      width: 70px;
+      border: 1px solid gray;
+    }
+    .week_info {
+      height: 20px;
+      line-height: 20px;
+    }
+    .week_info li {
+      height: 100%;
+      background-color: aliceblue;
+    }
+    .week {
+      height: 70px;
+    }
+    .week li {
+      height: 100%;
+    }
+    .week li.isEmpty {
+      background-color: #f8f8f8;
+    }
+    .day_0 {
+      color: red;
+    }
+    .day_6 {
+      color: blue;
+    }
+  </style>
+  <body>
+    <div id="app"></div>
+    <div id="test_date">
+      <input type="date" id="date_change" onchange="getDate(this);" />
+    </div>
+  </body>
+</html>
