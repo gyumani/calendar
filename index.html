@@ -8,11 +8,11 @@
   </head>
   <script>
     window.onload = function () {
-      makeCalendar("2022", "10");
+      makeCalendar('2022', '10');
     };
 
     function makeCalendar(yyyy, mm) {
-      const beforeCalendar = document.getElementById("calendar");
+      const beforeCalendar = document.getElementById('calendar');
       console.log(beforeCalendar);
       if (beforeCalendar != null) {
         beforeCalendar.remove();
@@ -31,17 +31,17 @@
       let calendar = getDatesStartToLast(startCalDate, endCalDate);
 
       if (calendar) {
-        const calendarDom = document.createElement("div");
-        calendarDom.id = "calendar";
+        const calendarDom = document.createElement('div');
+        calendarDom.id = 'calendar';
 
-        let basicWeekInfo = document.createElement("ul");
-        basicWeekInfo.className = "week_info";
+        let basicWeekInfo = document.createElement('ul');
+        basicWeekInfo.className = 'week_info';
 
-        let baseDay = ["일", "월", "화", "수", "목", "금", "토"];
+        let baseDay = ['일', '월', '화', '수', '목', '금', '토'];
         for (let i = 0; i < baseDay.length; i++) {
           console.log(baseDay[i]);
-          let basedayLi = document.createElement("li");
-          basedayLi.className = "base_day day day_" + i;
+          let basedayLi = document.createElement('li');
+          basedayLi.className = 'base_day day day_' + i;
           basedayLi.innerHTML = baseDay[i];
           basicWeekInfo.appendChild(basedayLi);
         }
@@ -50,26 +50,25 @@
 
         let weekList = [];
         for (key in calendar) {
-          if (!weekList.includes(calendar[key].weekCnt))
-            weekList.push(calendar[key].weekCnt);
+          if (!weekList.includes(calendar[key].weekCnt)) weekList.push(calendar[key].weekCnt);
         }
 
         weekList.forEach(function (idx) {
-          let ul = document.createElement("ul");
-          ul.className = "week week_" + idx;
+          let ul = document.createElement('ul');
+          ul.className = 'week week_' + idx;
           for (key in calendar) {
             if (calendar[key].weekCnt == idx) {
-              let li = document.createElement("li");
-              li.className = key + " day day_" + calendar[key].dayIdx;
+              let li = document.createElement('li');
+              li.className = key + ' day day_' + calendar[key].dayIdx;
               let strMonth = calendar[key].month;
               let day = calendar[key].day;
-              day = day < 10 ? "0" + day : day;
+              day = day < 10 ? '0' + day : day;
 
               if (strMonth == month + 1) {
-                strMonth = strMonth < 10 ? "0" + strMonth : strMonth;
-                li.innerHTML = strMonth + "-" + day;
+                strMonth = strMonth < 10 ? '0' + strMonth : strMonth;
+                li.innerHTML = strMonth + '-' + day;
               } else {
-                li.classList.add("isEmpty");
+                li.classList.add('isEmpty');
               }
               ul.appendChild(li);
             }
@@ -77,7 +76,7 @@
           calendarDom.appendChild(ul);
         });
 
-        document.getElementById("app").appendChild(calendarDom);
+        document.getElementById('app').appendChild(calendarDom);
       }
     }
 
@@ -86,7 +85,7 @@
       var curDate = startDate;
       let weekCnt = 0;
       while (curDate <= lastDate) {
-        result[curDate.toISOString().split("T")[0]] = {
+        result[curDate.toISOString().split('T')[0]] = {
           year: curDate.getFullYear(),
           month: curDate.getMonth() + 1,
           day: curDate.getDate(),
@@ -101,7 +100,7 @@
 
     function getDate(_obj) {
       console.log(_obj.value);
-      const valueArray = _obj.value.split("-");
+      const valueArray = _obj.value.split('-');
       makeCalendar(valueArray[0], valueArray[1]);
     }
   </script>
